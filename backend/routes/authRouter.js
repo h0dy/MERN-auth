@@ -3,8 +3,8 @@ import { login, logout, signup } from "../controllers/authController.js";
 
 const router = Router();
 
-router.route("/login").get(login);
-router.route("/signup").get(signup);
-router.route("/logout").get(logout);
+router.route("/login").post(login);
+router.route("/signup").post(signup);
+router.route("/logout").post(logout);
 
 export default router;

@@ -6,11 +6,10 @@ import authRoute from "./routes/authRouter.js";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-dotenv.config();
+// middlewares
+app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "hello world" });
-});
+dotenv.config();
 
 app.use("/api/auth", authRoute);
 
