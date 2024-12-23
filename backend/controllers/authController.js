@@ -91,10 +91,8 @@ export const login = async (req, res) => {
         return res.status(200).json({
           status: "success",
           message: "Logged in successfully",
-          user: {
-            ...user._doc,
-            password: undefined,
-          },
+          ...user._doc,
+          password: undefined,
         });
       }
     }
@@ -106,6 +104,7 @@ export const login = async (req, res) => {
     return res.status(400).json({ status: "fail", message: error.message });
   }
 };
+
 export const logout = async (req, res) => {
   res.clearCookie("authToken");
   res.sendStatus(204);
@@ -162,4 +161,14 @@ export const resetPassword = async (req, res) => {
     console.error("Error in the login function/controller: ", error);
     return res.status(400).json({ status: "fail", message: error.message });
   }
+};
+
+export const authentication = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password");
+    if (user) {
+      return res.status(200).json({ status: "success", user });
+    }
+    return res.status(400).json({ status: "fail", message: "User not found" });
+  } catch (error) {}
 };
