@@ -3,5 +3,9 @@
 @tailwind utilities;
 
 .app {
-  @apply min-h-screen bg-gradient-to-br from-gray-800 via-purple-800 to-indigo-900 flex items-center justify-center relative overflow-hidden;
+  @apply min-h-screen bg-gradient-to-br from-gray-800 via-purple-900 to-violet-950 flex items-center justify-center relative overflow-hidden;
+}
+
+.floating-shape {
+  @apply absolute rounded-full opacity-20 blur-xl;
 }
