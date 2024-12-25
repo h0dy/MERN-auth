@@ -167,8 +167,15 @@ export const authentication = async (req, res) => {
   try {
     const user = await User.findById(req.userId).select("-password");
     if (user) {
-      return res.status(200).json({ status: "success", user });
+      return res.status(200).json({
+        status: "success",
+        message: `Welcome back, ${user.name}`,
+        user,
+      });
     }
     return res.status(400).json({ status: "fail", message: "User not found" });
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error in the authentication function/controller: ", error);
+    return res.status(400).json({ status: "fail", message: error.message });
+  }
 };
