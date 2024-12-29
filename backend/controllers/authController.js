@@ -3,7 +3,6 @@ import generateTokenSetCookie from "../utils/generateTokenSetCookie.js";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
-import { generateVerificationToken } from "../utils/generateVerificationToken.js";
 import {
   sendVerificationEmail,
   sendWelcomeEmail,
@@ -23,15 +22,18 @@ export const signup = async (req, res) => {
         .status(400)
         .json({ status: "fail", message: "User already exist" });
     }
-    const verificationToken = generateVerificationToken();
-    const user = await User.create({
+    const verificationToken = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
+    const user = new User({
       email,
       password,
       name,
       verificationToken,
       verificationTokenExpired: Date.now() + 1000 * 60 * 60 * 24,
     });
-
+    await user.save();
     generateTokenSetCookie(res, user._id);
 
     await sendVerificationEmail(user.email, verificationToken);
@@ -51,26 +53,34 @@ export const signup = async (req, res) => {
 };
 
 export const verifyEmail = async (req, res) => {
-  const { verificationToken, email } = req.body;
+  const { verificationToken } = req.body;
   try {
     const user = await User.findOne({
       verificationToken,
       verificationTokenExpired: { $gt: Date.now() },
     });
+
     if (!user) {
       return res.status(400).json({
         status: "fail",
         message: "Invalid code or expired verification token",
       });
     }
+
     user.isVerified = true;
     user.verificationToken = undefined;
     user.verificationTokenExpired = undefined;
     await user.save();
-    await sendWelcomeEmail(email, user.name);
+
+    await sendWelcomeEmail(user.email, user.name);
+
     res.status(200).json({
       status: "success",
       message: "Email has been verified successfully",
+      user: {
+        ...user._doc,
+        password: undefined,
+      },
     });
   } catch (error) {
     console.error("Error in the verifyEmail function/controller: ", error);
@@ -86,13 +96,15 @@ export const login = async (req, res) => {
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (isPasswordValid) {
         generateTokenSetCookie(res, user._id);
-        user.lasLogin = new Date();
+        user.lastLogin = new Date();
         await user.save();
         return res.status(200).json({
           status: "success",
           message: "Logged in successfully",
-          ...user._doc,
-          password: undefined,
+          user: {
+            ...user._doc,
+            password: undefined,
+          },
         });
       }
     }
