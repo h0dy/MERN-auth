@@ -39,7 +39,7 @@ const SignupPage = () => {
       className="form-container"
     >
       <div className="p-8">
-        <h2 className="form-heading">Create Account</h2>
+        <h2 className="heading">Create Account</h2>
         <form onSubmit={handleSubmit}>
           <Input
             icon={User}

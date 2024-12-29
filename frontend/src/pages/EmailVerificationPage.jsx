@@ -72,7 +72,7 @@ const EmailVerificationPage = () => {
         transition={{ duration: 0.5 }}
         className="verification-sub-container"
       >
-        <h2 className="form-heading">Verify Your Email</h2>
+        <h2 className="heading">Verify Your Email</h2>
         <p className="text-center text-sm text-gray-300 mb-6">
           Enter the 6 digit code sent to your email
         </p>

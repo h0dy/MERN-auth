@@ -14,7 +14,7 @@
   @apply sm:max-w-md max-w-xs w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden;
 }
 
-.form-heading {
+.heading {
   @apply sm:text-3xl text-2xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-indigo-600 text-transparent bg-clip-text;
 }
 
@@ -29,6 +29,7 @@
 .btn {
   @apply mt-5 w-full py-3 px-4 bg-gradient-to-r from-indigo-500 to-violet-700 text-white tracking-widest font-semibold rounded-lg shadow-lg hover:from-indigo-600 hover:to-violet-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition duration-200;
 }
+
 .bottom-form-container {
   @apply px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center items-center space-x-2;
 }
@@ -44,6 +45,15 @@
 .verify-code-box {
   @apply size-12 text-center text-2xl font-bold bg-gray-600 text-white border-2 border-gray-800 rounded-lg focus:border-indigo-500 focus:outline-none;
 }
+
 .err {
   @apply text-red-500 font-semibold mt-2;
+}
+
+.loading-spinner {
+  @apply size-16 border-4 border-t-violet-600 border-violet-200 rounded-full animate-spin-fast;
+}
+
+.dash-container {
+  @apply sm:max-w-md max-w-xs w-full mx-auto mt-10 p-8 bg-gray-900 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-xl shadow-2xl overflow-hidden border border-gray-800
 }

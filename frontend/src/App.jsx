@@ -3,10 +3,11 @@ import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
 import BackgroundMotion from "./components/BackgroundMotion";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/authStore";
 import { useEffect } from "react";
 import HomePage from "./pages/HomePage";
+import { motion } from "framer-motion";
 
 //protected route that require authentication
 const ProtectedRoute = ({ children }) => {
@@ -28,9 +29,6 @@ const ProtectedRoute = ({ children }) => {
 // redirect authenticated users to the home page
 const RedirectAuthUser = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore();
-
-  console.log("user object in the RedirectAuthUser: ", user);
-
   if (isAuthenticated && user.isVerified) {
     return <Navigate to="/" replace />;
   }
@@ -47,35 +45,41 @@ function App() {
 
   return (
     <div className="app">
-      <BackgroundMotion />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <HomePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <RedirectAuthUser>
-              <SignupPage />
-            </RedirectAuthUser>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <RedirectAuthUser>
-              <LoginPage />
-            </RedirectAuthUser>
-          }
-        />
-        <Route path="/verify-email" element={<EmailVerificationPage />} />
-      </Routes>
-      <Toaster />
+      {isCheckingAuth ? (
+        <motion.div className="loading-spinner" />
+      ) : (
+        <>
+          <BackgroundMotion />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <HomePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <RedirectAuthUser>
+                  <SignupPage />
+                </RedirectAuthUser>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <RedirectAuthUser>
+                  <LoginPage />
+                </RedirectAuthUser>
+              }
+            />
+            <Route path="/verify-email" element={<EmailVerificationPage />} />
+          </Routes>
+          <Toaster />
+        </>
+      )}
     </div>
   );
 }

@@ -21,7 +21,7 @@ const LoginPage = () => {
     e.preventDefault();
     await login(formData);
   };
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -30,7 +30,7 @@ const LoginPage = () => {
       className="form-container"
     >
       <div className="p-8">
-        <h2 className="form-heading">Welcome Back</h2>
+        <h2 className="heading">Welcome Back</h2>
         <form onSubmit={handleSubmit}>
           <Input
             icon={Mail}
