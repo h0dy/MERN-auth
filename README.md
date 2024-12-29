@@ -25,6 +25,10 @@ Full MERN stack Authentication
 - Reset Password Page UI
 
 You can [preview](https://mern-auth-g5hn.onrender.com) the project on Render.
+##### Note
+This project currently does not have a Mailtrap domain email configured. As a result, functionalities such as email verification, password reset, welcome emails, and similar features are not operational.
+
+To test these functionalities, you will need to run the application locally and configure it with your MAILTRAP_TOKEN. Please note that this will only work for the email associated with your Mailtrap account.
 
 ## To Run This Project On Your Local Machine
 
