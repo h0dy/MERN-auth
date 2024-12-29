@@ -63,7 +63,7 @@ const SignupPage = () => {
             value={formData.password}
             onChange={handleFormData}
           />
-          {error && <p className="text-red-500 font-semibold mt-2">{error}</p>}
+          {error && <p className="err">{error}</p>}
           <PasswordStrength password={formData.password} />
 
           <motion.button

@@ -44,3 +44,6 @@
 .verify-code-box {
   @apply size-12 text-center text-2xl font-bold bg-gray-600 text-white border-2 border-gray-800 rounded-lg focus:border-indigo-500 focus:outline-none;
 }
+.err {
+  @apply text-red-500 font-semibold mt-2;
+}
