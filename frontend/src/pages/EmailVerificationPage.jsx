@@ -10,10 +10,11 @@ const EmailVerificationPage = () => {
   const inputRefs = useRef([]);
   const navigate = useNavigate();
 
-  const { verifyEmail, isLoading, error } = useAuthStore();
+  const { error, isLoading, verifyEmail } = useAuthStore();
 
   const handleChange = (idx, value) => {
     const newCode = [...code];
+
     // Handle pasted code
     if (value.length > 1) {
       const pastedCode = value.slice(0, 6).split("");
@@ -21,6 +22,7 @@ const EmailVerificationPage = () => {
         newCode[i] = pastedCode[i] || "";
       }
       setCode(newCode);
+
       // Focus on the last non-empty input or the first empty one
       const lastFilledIdx = newCode.findLastIndex((num) => num !== "");
       const focusIndex = lastFilledIdx < 5 ? lastFilledIdx + 1 : 5;
@@ -28,11 +30,14 @@ const EmailVerificationPage = () => {
     } else {
       newCode[idx] = value;
       setCode(newCode);
+
+      // Move focus to the next input field if value is entered
       if (value && idx < 5) {
         inputRefs.current[idx + 1].focus();
       }
     }
   };
+
   const handleKeyDown = (idx, event) => {
     if (event.key === "Backspace" && !code[idx] && idx > 0) {
       inputRefs.current[idx - 1].focus();
@@ -41,11 +46,13 @@ const EmailVerificationPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const verificationCode = code.join("");
+    const verificationToken = code.join("");
     try {
-      await verifyEmail(verificationCode);
+      await verifyEmail(verificationToken);
       navigate("/");
-      toast.success("Email verified successfully 👍");
+      toast.success("Email verified successfully", {
+        icon: "✅",
+      });
     } catch (error) {
       console.error(error);
     }

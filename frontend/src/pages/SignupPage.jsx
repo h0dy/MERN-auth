@@ -13,15 +13,17 @@ const SignupPage = () => {
     password: "",
   });
   const navigate = useNavigate();
+
+  const { signup, error, isLoading } = useAuthStore();
+
   const handleFormData = (e) => {
     const { value, name } = e.target;
     return setFormData({ ...formData, [name]: value });
   };
 
-  const { signup, error, isLoading } = useAuthStore();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       await signup(formData);
       navigate("/verify-email");

@@ -10,14 +10,34 @@ export const useAuthStore = create((set) => ({
   error: null,
   isLoading: false,
   isCheckingAuth: true,
-  signup: async (data) => {
+
+  signup: async (credentials) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await axios.post(`${API_URL}/signup`, { ...data });
-      set({ user: res.data.user, isAuthenticated: true, isLoading: false });
+      const res = await axios.post(`${API_URL}/signup`, { ...credentials });
+      set({ isAuthenticated: true, user: res.data.user, isLoading: false });
     } catch (error) {
       set({
         error: error.response?.data?.message || "error signing up",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  login: async (credentials) => {
+    set({ isLoading: true, error: null });
+    try {
+      const res = await axios.post(`${API_URL}/login`, { ...credentials });
+      set({
+        isAuthenticated: true,
+        user: res.data.user,
+        error: null,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "error login ",
         isLoading: false,
       });
       throw error;
@@ -29,11 +49,30 @@ export const useAuthStore = create((set) => ({
       const res = await axios.post(`${API_URL}/verify-email`, {
         verificationToken,
       });
-      set({ user: res.data.user, isAuthenticated: true, isLoading: false });
+      set({ isAuthenticated: true, user: res.data.user, isLoading: false });
     } catch (error) {
       set({
         error: error.response?.data?.message || "error verifying email",
         isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  checkAuth: async () => {
+    set({ isCheckingAuth: true, error: null });
+    try {
+      const res = await axios.get(`${API_URL}/authenticated`);
+      set({
+        isAuthenticated: true,
+        user: res.data.user,
+        isCheckingAuth: false,
+      });
+    } catch (error) {
+      set({
+        isAuthenticated: false,
+        error: null,
+        isCheckingAuth: false,
       });
       throw error;
     }

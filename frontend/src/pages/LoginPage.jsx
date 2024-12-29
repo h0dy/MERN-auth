@@ -3,22 +3,25 @@ import { motion } from "framer-motion";
 import Input from "../components/Input";
 import { Lock, Mail, Loader } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    isLoading: false,
   });
+  const { login, isLoading, error } = useAuthStore();
 
   const handleFormData = (e) => {
     const { value, name } = e.target;
-    console.log(value, name);
     return setFormData({ ...formData, [name]: value });
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    await login(formData);
   };
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -53,15 +56,16 @@ const LoginPage = () => {
               Forgot Password
             </Link>
           </div>
+          {error && <p className="err">{error}</p>}
           <motion.button
             className="btn"
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
             type="submit"
-            disabled={formData.isLoading}
-            style={{ cursor: formData.isLoading && "not-allowed" }}
+            disabled={isLoading}
+            style={{ cursor: isLoading && "not-allowed" }}
           >
-            {formData.isLoading ? (
+            {isLoading ? (
               <Loader className="size-5 animate-spin mx-auto" />
             ) : (
               "Log in"
