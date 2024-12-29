@@ -2,23 +2,32 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Input from "../components/Input";
 import { Lock, Mail, User, Loader } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PasswordStrength from "../components/PasswordChecker";
+import { useAuthStore } from "../store/authStore";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    isLoading: false,
   });
+  const navigate = useNavigate();
   const handleFormData = (e) => {
     const { value, name } = e.target;
-    console.log(value, name);
     return setFormData({ ...formData, [name]: value });
   };
-  const handleSubmit = (e) => {
+
+  const { signup, error, isLoading } = useAuthStore();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      await signup(formData);
+      navigate("/verify-email");
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <motion.div
@@ -54,7 +63,7 @@ const SignupPage = () => {
             value={formData.password}
             onChange={handleFormData}
           />
-
+          {error && <p className="text-red-500 font-semibold mt-2">{error}</p>}
           <PasswordStrength password={formData.password} />
 
           <motion.button
@@ -62,11 +71,11 @@ const SignupPage = () => {
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
             type="submit"
-            disabled={formData.isLoading}
-            style={{ cursor: formData.isLoading && "not-allowed" }}
+            disabled={isLoading}
+            style={{ cursor: isLoading && "not-allowed" }}
           >
-            {formData.isLoading ? (
-              <Loader className="size-5 animate-spin mx-auto" />
+            {isLoading ? (
+              <Loader className="size-5 animate-spin mx-auto" size={24} />
             ) : (
               "Sign up"
             )}
