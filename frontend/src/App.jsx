@@ -8,12 +8,12 @@ import { useAuthStore } from "./store/authStore";
 import { useEffect } from "react";
 import HomePage from "./pages/HomePage";
 import { motion } from "framer-motion";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 //protected route that require authentication
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore();
-
-  console.log("user object in the ProtectedRoute: ", user);
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
@@ -76,6 +76,22 @@ function App() {
               }
             />
             <Route path="/verify-email" element={<EmailVerificationPage />} />
+            <Route
+              path="/forgot-password"
+              element={
+                <RedirectAuthUser>
+                  <ForgotPasswordPage />
+                </RedirectAuthUser>
+              }
+            />
+            <Route
+              path="/reset-password/:token"
+              element={
+                <RedirectAuthUser>
+                  <ResetPasswordPage />
+                </RedirectAuthUser>
+              }
+            />
           </Routes>
           <Toaster />
         </>

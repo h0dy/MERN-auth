@@ -10,6 +10,7 @@ export const useAuthStore = create((set) => ({
   error: null,
   isLoading: false,
   isCheckingAuth: true,
+  message: null,
 
   signup: async (credentials) => {
     set({ isLoading: true, error: null });
@@ -84,15 +85,46 @@ export const useAuthStore = create((set) => ({
     try {
       const res = await axios.get(`${API_URL}/authenticated`);
       set({
-        isAuthenticated: true,
         user: res.data.user,
+        isAuthenticated: true,
         isCheckingAuth: false,
       });
     } catch (error) {
+      set({ error: null, isCheckingAuth: false, isAuthenticated: false });
+    }
+  },
+
+  forgotPassword: async (email) => {
+    set({ isLoading: true, error: null, message: null });
+    try {
+      const res = await axios.post(`${API_URL}/forgot-password`, { email });
       set({
-        isAuthenticated: false,
-        error: null,
-        isCheckingAuth: false,
+        message: res.data.message,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: error.response?.data?.message || "error sending reset password",
+      });
+      throw error;
+    }
+  },
+
+  resetPassword: async (token, newPassword) => {
+    set({ isLoading: true, error: null });
+    try {
+      const res = await axios.patch(`${API_URL}/reset-password/${token}`, {
+        newPassword,
+      });
+      set({
+        message: res.data.message,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: error.response?.data?.message || "error resetting password",
       });
       throw error;
     }
